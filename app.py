@@ -4,6 +4,7 @@ import hashlib
 import base64
 import urllib.parse
 import requests
+import json
 
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
@@ -53,6 +54,8 @@ def index():
 def generate_url():
     data = request.get_json()
     profile_name = data.get("profile")
+    force_login = data.get("force_login", False)
+    require_mfa = data.get("require_mfa", False)
 
     if not profile_name or profile_name not in AUTH_PROFILES:
         return jsonify({"error": "Invalid profile selected"}), 400
@@ -76,12 +79,21 @@ def generate_url():
         "code_challenge_method": "S256",
     }
 
+    if force_login:
+        params["prompt"] = "login"
+
+    if require_mfa:
+        claims = {"access_token": {"amr": {"values": ["mfa"]}}}
+        params["claims"] = json.dumps(claims, separators=(",", ":"))
+
     auth_url = (
         "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
         + urllib.parse.urlencode(params)
     )
 
-    return jsonify({"auth_url": auth_url})
+    return jsonify(
+        {"auth_url": auth_url, "code_verifier": verifier, "code_challenge": challenge}
+    )
 
 
 @app.route("/exchange", methods=["POST"])
