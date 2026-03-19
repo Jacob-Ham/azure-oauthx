@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OAuth Token Automation</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-bg: #1c1e20;
+            --color-text: #e3dfd9;
+            --color-text-secondary: #666;
+            --color-border: #e5e5e5;
+            --color-link: #0066cc;
+            --color-link-hover: #0052a3;
+            --color-accent: #4a9eff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.07em;
+        }
+
+        section {
+            margin-bottom: 48px;
+        }
+
+        h2 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-secondary);
+            margin-bottom: 24px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--color-text-secondary);
+            margin-bottom: 8px;
+        }
+
+        select, textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: var(--color-text);
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 12px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--color-accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s ease;
+        }
+
+        button:hover {
+            background: #3a8eef;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .url-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            word-break: break-all;
+            margin-bottom: 24px;
+        }
+
+        .url-box a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-size: 13px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            word-break: break-all;
+        }
+
+        .url-box a:hover {
+            text-decoration: underline;
+        }
+
+        .instruction {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .token-box {
+            margin-bottom: 24px;
+        }
+
+        .token-box label {
+            font-size: 12px;
+            color: var(--color-accent);
+            margin-bottom: 8px;
+        }
+
+        .token-box textarea {
+            margin-bottom: 8px;
+            min-height: 120px;
+        }
+
+        .copy-btn {
+            width: auto;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.1);
+            font-size: 12px;
+            display: inline-block;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .token-info {
+            display: flex;
+            gap: 30px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .token-info div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .token-info label {
+            margin: 0;
+            font-size: 11px;
+        }
+
+        .token-info span {
+            font-size: 14px;
+            color: var(--color-text);
+        }
+
+        .error {
+            background: rgba(233, 69, 96, 0.1);
+            border: 1px solid rgba(233, 69, 96, 0.3);
+            color: #e94560;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 48px 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .token-info {
+                flex-direction: column;
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OAuth Token Automation</h1>
+            <p class="subtitle">Microsoft Identity Token Generator</p>
+        </header>
+
+        <section>
+            <h2>1. Select Profile</h2>
+            <div class="form-group">
+                <label for="profile">Authentication Profile</label>
+                <select id="profile">
+                    {% for name, config in profiles.items() %}
+                    <option value="{{ name }}">{{ name }} ({{ config.resource_name }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button id="generate-btn">Generate Auth URL</button>
+        </section>
+
+        <section id="auth-section" class="hidden">
+            <h2>2. Authorize</h2>
+            <p class="instruction">Click the link below, sign in, then immediately copy the URL from the browser address bar before it redirects.</p>
+            <div class="url-box">
+                <a id="auth-url" href="#" target="_blank"></a>
+            </div>
+        </section>
+
+        <section id="exchange-section" class="hidden">
+            <h2>3. Exchange Token</h2>
+            <p class="instruction">Paste the full URL from your browser here.</p>
+            <div class="form-group">
+                <textarea id="callback-url" placeholder="https://login.microsoftonline.com/common/wrongplace#code=..."></textarea>
+            </div>
+            <button id="exchange-btn">Exchange for Tokens</button>
+        </section>
+
+        <section id="results-section" class="hidden">
+            <h2>4. Tokens</h2>
+            
+            <div class="token-box">
+                <label>Access Token</label>
+                <textarea id="access-token" readonly></textarea>
+                <button class="copy-btn" data-target="access-token">Copy</button>
+            </div>
+            
+            <div class="token-box">
+                <label>Refresh Token</label>
+                <textarea id="refresh-token" readonly></textarea>
+                <button class="copy-btn" data-target="refresh-token">Copy</button>
+            </div>
+            
+            <div class="token-info">
+                <div>
+                    <label>Expires In</label>
+                    <span id="expires-in"></span>
+                </div>
+                <div>
+                    <label>Token Type</label>
+                    <span id="token-type"></span>
+                </div>
+            </div>
+        </section>
+
+        <div id="error" class="error hidden"></div>
+    </div>
+
+    <script>
+        document.getElementById('generate-btn').addEventListener('click', async () => {
+            const profile = document.getElementById('profile').value;
+            
+            try {
+                const response = await fetch('/generate-url', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({profile: profile})
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+                
+                const authUrl = document.getElementById('auth-url');
+                authUrl.href = data.auth_url;
+                authUrl.textContent = data.auth_url;
+                
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('exchange-section').classList.remove('hidden');
+                hideError();
+            } catch (err) {
+                showError('Failed to generate URL: ' + err.message);
+            }
+        });
+
+        document.getElementById('exchange-btn').addEventListener('click', async () => {
+            const callbackUrl = document.getElementById('callback-url').value.trim();
+            
+            if (!callbackUrl) {
+                showError('Please paste the callback URL');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/exchange', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({callback_url: callbackUrl})
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    showError(data.error);
+                    return;
+                }
+                
+                document.getElementById('access-token').value = data.access_token || '';
+                document.getElementById('refresh-token').value = data.refresh_token || '';
+                document.getElementById('expires-in').textContent = data.expires_in || '';
+                document.getElementById('token-type').textContent = data.token_type || '';
+                
+                document.getElementById('results-section').classList.remove('hidden');
+                hideError();
+            } catch (err) {
+                showError('Failed to exchange tokens: ' + err.message);
+            }
+        });
+
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                target.select();
+                document.execCommand('copy');
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        });
+
+        function showError(msg) {
+            const errDiv = document.getElementById('error');
+            errDiv.textContent = msg;
+            errDiv.classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('error').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
