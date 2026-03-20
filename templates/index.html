@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OAuth Token Automation</title>
+    <title>OAuth Token Exchange</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -33,14 +33,14 @@
         }
 
         .container {
-            max-width: 640px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 80px 24px;
+            padding: 60px 24px;
         }
 
         header {
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         h1 {
@@ -177,7 +177,7 @@
         }
 
         .token-box textarea {
-            margin-bottom: 0;
+            margin-bottom: 8px;
             min-height: 200px;
         }
 
@@ -437,7 +437,7 @@
     <div class="container">
         <header>
             <h1>OAuth Token Automation</h1>
-            <p class="subtitle">Microsoft Identity Token Generator</p>
+            <p class="subtitle">azure-oauthx</p>
         </header>
 
         <section>
@@ -465,7 +465,7 @@
 
         <section id="auth-section" class="hidden">
             <h2>2. Authorize</h2>
-            <p class="instruction">Click the link below, sign in, then immediately copy the URL from the browser address bar before it redirects.</p>
+            <p class="instruction">Click the link below, sign in, then copy the URL from the browser address bar.</p>
             <div class="collapsible">
                 <button class="collapsible-toggle" id="pkce-toggle">Show challenge & verifier</button>
                 <div class="collapsible-content" id="pkce-content">
@@ -495,9 +495,9 @@
 
         <section id="exchange-section" class="hidden">
             <h2>3. Exchange Token</h2>
-            <p class="instruction">Paste the full URL from your browser here.</p>
+            <p class="instruction">Paste the full URL from your browser here, or just the authorization code.</p>
             <div class="form-group">
-                <textarea id="callback-url" placeholder="https://login.microsoftonline.com/common/wrongplace#code=..."></textarea>
+                <textarea id="callback-url" placeholder="https://login.microsoftonline.com/common/oauth2/v2.0/authorize?... or paste just the code here"></textarea>
             </div>
             <button id="exchange-btn">Exchange for Tokens</button>
         </section>

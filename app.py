@@ -105,24 +105,38 @@ def exchange():
         return jsonify({"error": "Missing callback URL"}), 400
 
     code = None
-    # First check for fragment (response_mode=fragment)
-    if "#code=" in callback_url:
-        fragment = callback_url.split("#code=")[1]
-        code = fragment.split("&")[0]
-    # Then check for query parameter (response_mode=query)
-    elif "?code=" in callback_url or "&code=" in callback_url:
-        # Extract from query string
-        from urllib.parse import urlparse, parse_qs
+    callback_url = callback_url.strip()
 
-        parsed = urlparse(callback_url)
-        params = parse_qs(parsed.query)
-        if "code" in params:
-            code = params["code"][0]
-        elif "code=" in callback_url:
-            code = callback_url.split("code=")[1].split("&")[0]
+    # Check if it's a raw authorization code (no URL structure)
+    if (
+        not callback_url.startswith(("http://", "https://", "microsoft-edge://"))
+        and len(callback_url) > 20
+    ):
+        # Looks like a raw code
+        code = callback_url
+    else:
+        # First check for fragment (response_mode=fragment)
+        if "#code=" in callback_url:
+            fragment = callback_url.split("#code=")[1]
+            code = fragment.split("&")[0]
+        # Then check for query parameter (response_mode=query)
+        elif "?code=" in callback_url or "&code=" in callback_url:
+            # Extract from query string
+            from urllib.parse import urlparse, parse_qs
+
+            parsed = urlparse(callback_url)
+            params = parse_qs(parsed.query)
+            if "code" in params:
+                code = params["code"][0]
+            elif "code=" in callback_url:
+                code = callback_url.split("code=")[1].split("&")[0]
 
     if not code:
-        return jsonify({"error": "No authorization code found in URL"}), 400
+        return jsonify(
+            {
+                "error": "No authorization code found. Paste either the full callback URL or just the authorization code."
+            }
+        ), 400
 
     verifier = session.get("code_verifier")
     client_id = session.get("client_id")
