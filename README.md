@@ -1,6 +1,7 @@
 # azure-oauthx
 
 A web-based tool for generating and exchanging Microsoft OAuth tokens using standard OAuth2 flows.
+This tool was buit because these OAuth2 authorization codes lasts 1 - 5 minutes, making speed crucial.
 
 ## Overview
 
@@ -51,6 +52,15 @@ The web interface will be available at `http://localhost:9090`.
 5. Copy the callback URL from your browser
 6. Paste the URL into the exchange field
 7. Click "Exchange for Tokens" to receive access and refresh tokens
+
+Generate URL based on chosen profile:
+<img width="826" height="727" alt="image" src="https://github.com/user-attachments/assets/3258569e-8469-4228-aa24-42196de10737" />
+
+Copy URL, auth, copy url.
+<img width="1170" height="512" alt="image" src="https://github.com/user-attachments/assets/4b672b41-0e6c-42ee-87a5-a5848f9ddf67" />
+
+Paste url, exchange for tokens.
+<img width="894" height="809" alt="image" src="https://github.com/user-attachments/assets/5aa25c50-f484-4823-ac43-a3c2f047beba" />
 
 ## Security Notes
 
