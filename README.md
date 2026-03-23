@@ -1,7 +1,6 @@
 # azure-oauthx
 
 A web-based tool for generating and exchanging Microsoft OAuth tokens using standard OAuth2 flows.
-This tool was buit because these OAuth2 authorization codes lasts 1 - 5 minutes, making speed crucial.
 
 ## Overview
 
